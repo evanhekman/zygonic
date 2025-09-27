@@ -1,71 +1,71 @@
 import os
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
-import google.generativeai as genai
+from google import generativeai as genai
 from typing import Optional
 import uvicorn
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Initialize FastAPI app
+# fastapi config
 app = FastAPI(title="Gemini API Backend", version="1.0.0")
 
-# Configure Gemini API
+# api config
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
-
-# Initialize the model
-try:
-    model = genai.GenerativeModel('gemini-2.5-flash')
-except Exception as e:
-    print(f"Warning: Could not initialize Gemini model: {e}")
-    model = None
-
-@app.get("/")
-async def root():
-    """Health check endpoint"""
-    return {"message": "Gemini API Backend is running"}
-
-@app.get("/query")
-async def query_gemini(q: str = Query(..., description="Query string to send to Gemini")):
+with open("prompts/backbone.txt") as f:
+    model = genai.GenerativeModel(
+        'gemini-2.5-flash',
+        system_instruction=f.read()
+    )
+    
+def query_gemini(query: str):
     """
-    Relay a query to Google Gemini and return the response
-    
-    Args:
-        q: Query string to send to Gemini
-    
-    Returns:
-        JSON response with Gemini's output
+    queries gemini, checking for basic error cases.
     """
     if not GEMINI_API_KEY:
         raise HTTPException(
             status_code=500, 
             detail="GEMINI_API_KEY not configured"
         )
-    
     if not model:
         raise HTTPException(
             status_code=500, 
-            detail="Gemini model not initialized"
+            detail="model not initialized"
         )
     
     try:
-        # Send query to Gemini
-        response = model.generate_content(q)
-        
-        return JSONResponse(content={
-            "query": q,
-            "response": response.text,
-            "status": "success"
-        })
-        
+        return model.generate_content(query)
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Error querying Gemini: {str(e)}"
+            detail=f"error during query: {str(e)}"
         )
+
+@app.get("/")
+async def root():
+    return {"message": "hello world"}
+
+@app.get("/task")
+async def start_task(task: str):
+    """
+    function that queries multiple times to define a plan and needed integrations for the first step of the task
+    """
+    response = query_gemini(task).text
+    print(response)
+    if "<integrations>" not in response:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to return integrations: {response}"
+        )
+    return JSONResponse(content={
+        "response": response,
+        "status": "success"
+    })
+        
+
+
 
 if __name__ == "__main__":
     # Run the server
