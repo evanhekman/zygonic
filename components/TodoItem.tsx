@@ -8,13 +8,15 @@ interface TodoItemProps {
   onDeleteTask: (id: number) => void;
   onUpdateText: (id: number, description: string) => void;
   onStartTask?: (id: number) => void;
+  onRefreshTasks?: () => void;
 }
 
-export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDeleteTask, onUpdateText, onStartTask }) => {
+export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDeleteTask, onUpdateText, onStartTask, onRefreshTasks }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.description);
   const inputRef = useRef<HTMLInputElement>(null);
   const [localProgress, setLocalProgress] = useState(Math.round(task.progress * 100));
+  const [isStarting, setIsStarting] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -41,10 +43,17 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
 
   const handleStartTask = async () => {
     if (onStartTask) {
+      setIsStarting(true);
       try {
         await onStartTask(task.id);
+        // Trigger data refresh after successful start
+        if (onRefreshTasks) {
+          onRefreshTasks();
+        }
       } catch (error) {
         console.error('Failed to start task:', error);
+      } finally {
+        setIsStarting(false);
       }
     }
   };
@@ -135,9 +144,21 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
           {localProgress === 0 && onStartTask && (
             <button
               onClick={handleStartTask}
-              className="absolute inset-0 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl z-30"
+              disabled={isStarting}
+              className={`absolute inset-0 text-white text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl z-30 ${
+                isStarting 
+                  ? 'bg-cyan-500 cursor-not-allowed' 
+                  : 'bg-cyan-600 hover:bg-cyan-700'
+              }`}
             >
-              Start Task
+              {isStarting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Starting...
+                </>
+              ) : (
+                'Start Task'
+              )}
             </button>
           )}
           

@@ -59,6 +59,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handleRefreshTasks = async () => {
+    // Your existing code to fetch tasks
+    const freshTasks = await apiService.getAllTasks();
+    setTasks(freshTasks);
+  };
+
   const deleteTask = async (id: number) => {
     // Store task for potential rollback
     const taskToDelete = tasks.find(t => t.id === id);
@@ -189,6 +195,7 @@ const App: React.FC = () => {
               onDeleteTask={deleteTask} 
               onUpdateProgress={updateTaskProgress}
               onUpdateText={updateTaskDescription}
+              onRefreshTasks={handleRefreshTasks}
             />
           </div>
         </main>

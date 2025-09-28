@@ -8,6 +8,7 @@ interface TodoListProps {
   onDeleteTask: (id: number) => void;
   onUpdateText: (id: number, description: string) => void;
   onStartTask?: (id: number) => void;
+  onRefreshTasks?: () => void;
 }
 
 export const TodoList: React.FC<TodoListProps> = ({ 
@@ -15,7 +16,8 @@ export const TodoList: React.FC<TodoListProps> = ({
   onUpdateProgress, 
   onDeleteTask, 
   onUpdateText, 
-  onStartTask 
+  onStartTask,
+  onRefreshTasks
 }) => {
   if (tasks.length === 0) {
     return (
@@ -53,6 +55,7 @@ export const TodoList: React.FC<TodoListProps> = ({
           onDeleteTask={onDeleteTask}
           onUpdateText={onUpdateText}
           onStartTask={handleStartTask}
+          onRefreshTasks={onRefreshTasks}
         />
       ))}
     </div>

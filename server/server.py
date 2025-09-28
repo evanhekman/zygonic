@@ -65,7 +65,7 @@ async def start_task(task_id: int):
     if not task:
         raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
     
-    updated = task_mgr.update_task(task_id, status="STARTED")
+    updated = task_mgr.update_task(task_id, status="STARTED", progress=0.02)
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to update task status")
     
