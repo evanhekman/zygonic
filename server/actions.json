@@ -1,7 +1,7 @@
 [
   {
     "integration": "notion",
-    "action": "create_page",
+    "action": "create",
     "description": "Creates a new page in Notion with a specified title and content. Use this to store new information, notes, or documents.",
     "args": {
       "page_name": {
@@ -17,7 +17,7 @@
   },
   {
     "integration": "notion",
-    "action": "search_page",
+    "action": "search",
     "description": "Searches for existing pages in Notion by title or content. Use this to find information before creating a new page to avoid duplicates.",
     "args": {
       "query": {
@@ -29,7 +29,7 @@
   },
   {
     "integration": "notion",
-    "action": "modify_page",
+    "action": "modify",
     "description": "Updates the content of an existing Notion page. You must know the exact title of the page you want to modify.",
     "args": {
       "page_name": {

@@ -6,11 +6,6 @@ from typing import Dict, List, Optional, Union
 from datetime import datetime
 import json
 
-class TaskStatus(Enum):
-    NEW = "NEW"
-    STARTED = "STARTED"
-    COMPLETED = "COMPLETED"
-
 class DatabaseConnection:
     def __init__(self):
         self.conn = None
@@ -45,7 +40,7 @@ class TaskManager:
         CREATE TABLE IF NOT EXISTS tasks (
             id SERIAL PRIMARY KEY,
             description TEXT NOT NULL,
-            actions JSONB DEFAULT '{}',
+            action JSONB DEFAULT '{}',  -- Changed from 'actions' to 'action'
             status VARCHAR(20) DEFAULT 'NEW' CHECK (status IN ('NEW', 'STARTED', 'COMPLETED')),
             progress FLOAT DEFAULT 0.0 CHECK (progress >= 0.0 AND progress <= 1.0),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,17 +50,17 @@ class TaskManager:
         -- Create indexes for better performance
         CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
         CREATE INDEX IF NOT EXISTS idx_tasks_progress ON tasks(progress);
-        CREATE INDEX IF NOT EXISTS idx_tasks_actions ON tasks USING GIN (actions);
+        CREATE INDEX IF NOT EXISTS idx_tasks_action ON tasks USING GIN (action);  -- Changed index name
         """
-        
         try:
             with self.db.conn.cursor() as cursor:
                 cursor.execute(create_table_query)
         except psycopg2.Error as e:
             raise Exception(f"Failed to create tasks table: {e}")
     
+
     def create_task(self, description: str, action: Dict = None, 
-                   status: TaskStatus = TaskStatus.NEW, progress: float = 0.0) -> int:
+                   status: str = "NEW", progress: float = 0.0) -> int:
         """Create a new task and return its id."""
         if action is None:
             action = {}
@@ -74,7 +69,7 @@ class TaskManager:
             raise ValueError("Progress must be between 0.0 and 1.0")
         
         insert_query = """
-        INSERT INTO tasks (description, actions, status, progress)
+        INSERT INTO tasks (description, action, status, progress)
         VALUES (%s, %s, %s, %s)
         RETURNING id;
         """
@@ -92,10 +87,11 @@ class TaskManager:
         except psycopg2.Error as e:
             raise Exception(f"Failed to create task: {e}")
     
+
     def get_task(self, id: int) -> Optional[Dict]:
         """Retrieve a task by its ID."""
         select_query = """
-        SELECT id, description, actions, status, progress, 
+        SELECT id, description, action, status, progress, 
                created_at, updated_at
         FROM tasks WHERE id = %s;
         """
@@ -113,7 +109,7 @@ class TaskManager:
     def get_all_tasks(self) -> List[Dict]:
         """Retrieve all tasks."""
         select_query = """
-        SELECT id, description, actions, status, progress,
+        SELECT id, description, action, status, progress,
                created_at, updated_at
         FROM tasks ORDER BY created_at DESC;
         """
@@ -128,15 +124,15 @@ class TaskManager:
     
     def update_task(self, id: int, **kwargs) -> bool:
         """Update a task with given fields. Returns True if task was found and updated."""
-        allowed_fields = ['description', 'actions', 'status', 'progress']
+        allowed_fields = ['description', 'action', 'status', 'progress']
         updates = []
         values = []
         
         for field, value in kwargs.items():
             if field in allowed_fields:
-                if field == 'status' and isinstance(value, TaskStatus):
-                    value = value.value
-                elif field == 'actions' and isinstance(value, dict):
+                if field == 'status' and isinstance(value, str):
+                    value = value
+                elif field == 'action' and isinstance(value, dict):
                     value = json.dumps(value)
                 elif field == 'progress' and not 0.0 <= value <= 1.0:
                     raise ValueError("Progress must be between 0.0 and 1.0")
@@ -174,10 +170,10 @@ class TaskManager:
         except psycopg2.Error as e:
             raise Exception(f"Failed to delete task {id}: {e}")
     
-    def get_tasks_by_status(self, status: TaskStatus) -> List[Dict]:
+    def get_tasks_by_status(self, status: str) -> List[Dict]:
         """Get all tasks with a specific status."""
         select_query = """
-        SELECT id, description, actions, status, progress,
+        SELECT id, description, action, status, progress,
                created_at, updated_at
         FROM tasks WHERE status = %s ORDER BY created_at DESC;
         """

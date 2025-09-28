@@ -15,7 +15,7 @@ User Request: "Write some notes about Socrates"
 Your Response:
   {
     "integration": "notion",
-    "action": "create_page",
+    "action": "create",
     "args": {
       "page_name": {
         "Thoughts on Socrates"

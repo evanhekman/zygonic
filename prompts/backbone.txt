@@ -8,7 +8,7 @@ Do not respond with conversational text when calling a tool.
 Here are the tools available to you:
 [
   {
-    "tool_name": "notion.create_page",
+    "tool_name": "notion.create",
     "description": "Creates a new page in Notion with a specified title and content. Use this to store new information, notes, or documents.",
     "parameters": {
       "type": "object",
@@ -65,7 +65,7 @@ User Request: "Please take notes about our meeting on Project Phoenix and save t
 
 Your Response:
 {
-  "tool_name": "notion.create_page",
+  "tool_name": "notion.create",
   "parameters": {
     "page_name": "Essay on Longtermism",
     "page_content": "The vast majority of human beings who will ever live have not yet been born. This simple, yet profound, observation is the foundation of longtermism, an ethical framework that suggests our primary moral obligation is to ensure the long and flourishing future of humanity."

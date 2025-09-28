@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from db import TaskManager, TaskStatus
+from db import TaskManager
 import json
 
 def test_database_operations():
@@ -28,7 +28,7 @@ def test_database_operations():
         task_id = tm.create_task(
             description="Test task for database validation",
             action=test_actions,
-            status=TaskStatus.NEW,
+            status="NEW",
             progress=0.0
         )
         print(f"✓ Created test task with ID: {task_id}")
@@ -47,9 +47,9 @@ def test_database_operations():
         print("\n4. Testing task updates...")
         update_success = tm.update_task(
             task_id,
-            status=TaskStatus.STARTED,
+            status="STARTED",
             progress=0.5,
-            actions={"steps": ["Updated step 1", "Updated step 2"], "priority": "medium"}
+            action={"steps": ["Updated step 1", "Updated step 2"], "priority": "medium"}
         )
         if update_success:
             print("✓ Task updated successfully")
@@ -62,7 +62,7 @@ def test_database_operations():
         # Test 5: Create multiple tasks for bulk operations
         print("\n5. Testing bulk operations...")
         task_ids = []
-        statuses = [TaskStatus.NEW, TaskStatus.STARTED, TaskStatus.COMPLETED]
+        statuses = ["NEW", "STARTED", "COMPLETED"]
         
         for i, status in enumerate(statuses):
             tid = tm.create_task(
@@ -81,9 +81,9 @@ def test_database_operations():
         
         # Test 7: Get tasks by status
         print("\n7. Testing get tasks by status...")
-        new_tasks = tm.get_tasks_by_status(TaskStatus.NEW)
-        started_tasks = tm.get_tasks_by_status(TaskStatus.STARTED)
-        completed_tasks = tm.get_tasks_by_status(TaskStatus.COMPLETED)
+        new_tasks = tm.get_tasks_by_status("NEW")
+        started_tasks = tm.get_tasks_by_status("STARTED")
+        completed_tasks = tm.get_tasks_by_status("COMPLETED")
         print(f"✓ Found {len(new_tasks)} NEW tasks")
         print(f"✓ Found {len(started_tasks)} STARTED tasks")
         print(f"✓ Found {len(completed_tasks)} COMPLETED tasks")

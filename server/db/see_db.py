@@ -46,11 +46,11 @@ def main():
             print(f"Created: {format_timestamp(task['created_at'])}")
             print(f"Updated: {format_timestamp(task['updated_at'])}")
             
-            # Pretty print actions if they exist
-            if task['actions']:
-                print("Actions:")
-                if isinstance(task['actions'], dict):
-                    for key, action in task['actions'].items():
+            # Pretty print action if they exist
+            if task['action']:
+                print("action:")
+                if isinstance(task['action'], dict):
+                    for key, action in task['action'].items():
                         if isinstance(action, dict):
                             print(f"  {key}: {action.get('integration', 'N/A')}.{action.get('action', 'N/A')}")
                             if action.get('args'):
@@ -64,9 +64,9 @@ def main():
                         else:
                             print(f"  {key}: {truncate_text(str(action), 60)}")
                 else:
-                    print(f"  {truncate_text(str(task['actions']), 60)}")
+                    print(f"  {truncate_text(str(task['action']), 60)}")
             else:
-                print("Actions: None")
+                print("action: None")
             
             print()  # Empty line between tasks
             

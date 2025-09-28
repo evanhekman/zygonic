@@ -10,7 +10,7 @@ curl -X POST "http://127.0.0.1:8000/new" \
     "actions": [
       {
         "integration": "notion",
-        "action": "create_page", 
+        "action": "create", 
         "args": {"title": "AI Notes", "content": "Notes about AI"},
         "webhook": "NOTION_WEBHOOK"
       }
@@ -25,7 +25,7 @@ curl "http://127.0.0.1:8000/new-simple?description=Test%20task&status=NEW&progre
 # Test with actions in GET endpoint
 curl -G "http://127.0.0.1:8000/new-simple" \
   --data-urlencode "description=Create Notion page" \
-  --data-urlencode 'actions=[{"integration":"notion","action":"create_page","args":{"title":"Test"},"webhook":"WEBHOOK_URL"}]' \
+  --data-urlencode 'actions=[{"integration":"notion","action":"create","args":{"title":"Test"},"webhook":"WEBHOOK_URL"}]' \
   --data-urlencode "status=NEW" \
   --data-urlencode "progress=0.0"
 
@@ -62,7 +62,7 @@ class TestTaskAPI:
             "actions": [
                 {
                     "integration": "notion",
-                    "action": "create_page",
+                    "action": "create",
                     "args": {"title": "Test Page", "content": "Test content"},
                     "webhook": "TEST_WEBHOOK"
                 }

@@ -4,7 +4,7 @@ Example:
 
 {
     "integration": "notion",
-    "action": "create_page",
+    "action": "create",
     "args": {
         "page_name": "Name of New Page",
         "page_content": "Content for New Page",
@@ -13,7 +13,7 @@ Example:
 }
 
 This contains the configuration info for to create a Notion Page using the appropriate webhook, called with the correct arguments.
-The function to make the n8n call will be `notion.create_page` from the integrations/notion.py file.
+The function to make the n8n call will be `notion.create` from the integrations/notion.py file.
 This format is standardized across all calls. All "Action" instances must include the following keys:
 - "integration" for the module
 - "action" for the function

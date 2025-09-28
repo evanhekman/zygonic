@@ -10,7 +10,7 @@ def webhook(integration: str, action: str, args: dict, webhook: str):
     """
     Args:
         integration: the extension to integrate with (i.e. notion)
-        action: the action to perform (i.e. create_page)
+        action: the action to perform (i.e. create)
         args: the information for the webhook (i.e. {page_name: ..., page_content: ...})
         webhook: the env variable for the webhook (i.e. {NOTION_N8N_WEBHOOK})
     """

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from db import TaskManager, TaskStatus
+from db import TaskManager
 
 def setup_database():
     """Create the tasks table and populate it with sample data."""
@@ -14,7 +14,7 @@ def setup_database():
         print("✓ Tasks table created successfully")
         
         # Sample task 1: A simple task
-        task1_actions = {
+        task1_action = {
             "steps": ["Research PostgreSQL documentation", "Set up local environment", "Test connection"],
             "estimated_time": "2 hours",
             "priority": "high"
@@ -22,14 +22,14 @@ def setup_database():
         
         task1_id = tm.create_task(
             description="Set up PostgreSQL database for task management system",
-            action=task1_actions,
-            status=TaskStatus.STARTED,
+            action=task1_action,
+            status="STARTED",
             progress=0.7
         )
         print(f"✓ Created sample task 1 (ID: {task1_id})")
         
         # Sample task 2: A more complex task
-        task2_actions = {
+        task2_action = {
             "steps": [
                 "Design API endpoints",
                 "Implement CRUD operations",
@@ -45,8 +45,8 @@ def setup_database():
         
         task2_id = tm.create_task(
             description="Build REST API for task management with n8n integration",
-            action=task2_actions,
-            status=TaskStatus.NEW,
+            action=task2_action,
+            status="NEW",
             progress=0.0
         )
         print(f"✓ Created sample task 2 (ID: {task2_id})")
