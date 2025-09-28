@@ -6,8 +6,8 @@ Example:
     "integration": "notion",
     "action": "create_page",
     "args": {
-        page_name: "Name of New Page",
-        page_content: "Content for New Page",
+        "page_name": "Name of New Page",
+        "page_content": "Content for New Page",
     },
     "webhook": "NOTION_WEBHOOK",
 }
