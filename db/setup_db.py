@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from db.db import TaskManager, TaskStatus
+from db import TaskManager, TaskStatus
 
 def setup_database():
     """Create the tasks table and populate it with sample data."""

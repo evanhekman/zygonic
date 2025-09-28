@@ -1,7 +1,15 @@
 **Prerequisites:**  Node.js
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### run web app
+npm install
+npm run dev
+
+### run server
+setup .env file
+pip install -r requirements.txt
+python server/server.py
+
+### run db
+docker compose -f db/docker-compose.yml up -d
+python db/setup_db.py
+python db/test_db.py

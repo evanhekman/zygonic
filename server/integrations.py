@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 # --- Webhook Configuration ---
 # All Notion-related actions go to the same webhook.
 # The 'action' field in the payload tells n8n how to route it.
-N8N_NOTION_CREATE_PAGE = os.getenv("N8N_NOTION_CREATE_PAGE")
+NOTION = os.getenv("NOTION")
 
 
 # ==============================================================================
@@ -33,31 +33,29 @@ def call_n8n_webhook(payload: dict, webhook: str):
 def create_notion_page(page_name: str, page_content: str):
     """Implementation for creating a Notion page."""
     return call_n8n_webhook(
-        payload={"page_name": page_name, "page_content": page_content},
-        webhook=N8N_NOTION_CREATE_PAGE,
+        payload={"action": "create", "page_name": page_name, "page_content": page_content},
+        webhook=NOTION,
     )
 
-# def search_notion_page(query: str):
-#     """Implementation for searching a Notion page."""
-#     return call_n8n_webhook(
-#         action="notion_search_page",
-#         payload={"query": query},
-#         webhook=N8N_NOTION_WEBHOOK
-#     )
+def search_notion_page(query: str):
+    """Implementation for searching a Notion page."""
+    return call_n8n_webhook(
+        payload={"action": "search", "query": query},
+        webhook=NOTION
+    )
 
-# def modify_notion_page(page_name: str, new_content: str):
-#     """Implementation for modifying a Notion page."""
-#     return call_n8n_webhook(
-#         action="notion_modify_page",
-#         payload={"page_name": page_name, "new_content": new_content},
-#         webhook=N8N_NOTION_WEBHOOK
-#     )
+def modify_notion_page(page_url: str, new_content: str):
+    """Implementation for modifying a Notion page."""
+    return call_n8n_webhook(
+        payload={"action": "modify", "page_url": page_url, "new_content": new_content},
+        webhook=NOTION
+    )
 
 # --- Action Dictionary: Maps tool names from the spec to the Python functions ---
 ACTIONS = {
     "notion.create_page": create_notion_page,
-    # "notion.search_page": search_notion_page,
-    # "notion.modify_page": modify_notion_page,
+    "notion.search_page": search_notion_page,
+    "notion.modify_page": modify_notion_page,
 }
 
 
