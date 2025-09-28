@@ -25,11 +25,37 @@ n8n.webhook(webhook, action, args)
 
 """
 
+import webhook
+
 class Action:
-    def __init__():
+    def __init__(self, integration: str, action: str, args: dict, webhook: str):
+        assert(type(integration) == str)
+        assert(type(action) == str)
+        assert(type(args) == dict)
+        assert(type(webhook) == str)
+        self.integration = integration
+        self.action = action
+        self.args = args
+        self.webhook = webhook
+
+    def __init__(self, model_dump: str):
         ...
 
-    def json():
+    def serialize(self):
+        """
+        Convert Action -> JSON.
+        """
         ...
 
-    
+    def deserialize(self):
+        """
+        Convert JSON -> Action.
+        """
+        ...
+
+    def call(self):
+        """
+        Call the action webhook.
+        """
+        webhook.webhook(self.integration, self.action, self.args, self.webhook)
+        
