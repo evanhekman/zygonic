@@ -189,6 +189,6 @@
         "default": "Sheet3"
       }
     },
-    "webhook": "GOOGLE_SHEETS"
+    "webhook": "SHEETS"
   }
 ]
