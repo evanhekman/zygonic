@@ -11,9 +11,9 @@ load_dotenv()
 class Model:
     def __init__(self):
         GEMINI_API_KEY = os.getenv
-        with open("backbone.txt") as f:
+        with open("server/backbone.txt") as f:
             SYS_INSTR = f.read()
-        with open("actions.json") as f:
+        with open("server/backbone.txt") as f:
             SYS_INSTR += f.read()
         
         if not SYS_INSTR:
