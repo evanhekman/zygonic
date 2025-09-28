@@ -22,7 +22,7 @@ def setup_database():
         
         task1_id = tm.create_task(
             description="Set up PostgreSQL database for task management system",
-            actions=task1_actions,
+            action=task1_actions,
             status=TaskStatus.STARTED,
             progress=0.7
         )
@@ -45,7 +45,7 @@ def setup_database():
         
         task2_id = tm.create_task(
             description="Build REST API for task management with n8n integration",
-            actions=task2_actions,
+            action=task2_actions,
             status=TaskStatus.NEW,
             progress=0.0
         )

@@ -27,7 +27,7 @@ def test_database_operations():
         
         task_id = tm.create_task(
             description="Test task for database validation",
-            actions=test_actions,
+            action=test_actions,
             status=TaskStatus.NEW,
             progress=0.0
         )
@@ -67,7 +67,7 @@ def test_database_operations():
         for i, status in enumerate(statuses):
             tid = tm.create_task(
                 description=f"Bulk test task {i+1}",
-                actions={"test_number": i+1},
+                action={"test_number": i+1},
                 status=status,
                 progress=i * 0.5
             )

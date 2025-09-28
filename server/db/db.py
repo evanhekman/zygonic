@@ -64,11 +64,11 @@ class TaskManager:
         except psycopg2.Error as e:
             raise Exception(f"Failed to create tasks table: {e}")
     
-    def create_task(self, description: str, actions: Dict = None, 
+    def create_task(self, description: str, action: Dict = None, 
                    status: TaskStatus = TaskStatus.NEW, progress: float = 0.0) -> int:
         """Create a new task and return its id."""
-        if actions is None:
-            actions = {}
+        if action is None:
+            action = {}
         
         if not 0.0 <= progress <= 1.0:
             raise ValueError("Progress must be between 0.0 and 1.0")
@@ -83,8 +83,8 @@ class TaskManager:
             with self.db.conn.cursor() as cursor:
                 cursor.execute(insert_query, (
                     description,
-                    json.dumps(actions),
-                    status.value,
+                    json.dumps(action),
+                    status,
                     progress
                 ))
                 id = cursor.fetchone()[0]

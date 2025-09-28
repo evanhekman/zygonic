@@ -1,11 +1,11 @@
-from action import Action, ActionTemplate
+from action import Action
 
-# create an action template
-create_page_template = ActionTemplate(
-    "notion",
-    "create_page",
-    "NOTION",
-)
+# # create an action template
+# create_page_template = ActionTemplate(
+#     "notion",
+#     "create_page",
+#     "NOTION",
+# )
 
 # create a specific action
 create_page = Action(
@@ -19,12 +19,12 @@ create_page = Action(
 )
 
 # these are functionally the same
-create_page_template.call_with_args(
-    {
-        "page_name": "Philosophical Ramblings 2.0",
-        "page_content": "If doors have handles, why do windows have latches?",
-    }
-)
+# create_page_template.call_with_args(
+#     {
+#         "page_name": "Philosophical Ramblings 2.0",
+#         "page_content": "If doors have handles, why do windows have latches?",
+#     }
+# )
 create_page.call()
 
 # serialize
