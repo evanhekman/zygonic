@@ -8,7 +8,10 @@ import SwiftUI
 
 @main
 struct MenuApp: App {
-    @State private var tasks: [Task] = [] // Start with empty array
+    @State private var tasks: [Task] = {
+        // Initialize with loaded tasks
+        return loadInitialTasks()
+    }()
     @State private var newTaskName: String = ""
     
     var body: some Scene {
@@ -24,7 +27,15 @@ struct MenuApp: App {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(tasks.indices, id: \.self) { index in
-                            TaskRowView(task: $tasks[index])
+                            TaskRowView(
+                                task: $tasks[index],
+                                onTaskUpdate: { updatedTask in
+                                    updateTask(updatedTask, at: index)
+                                },
+                                onDelete: {
+                                    deleteTask(at: index)
+                                }
+                            )
                         }
                     }
                 }
@@ -65,27 +76,89 @@ struct MenuApp: App {
         .menuBarExtraStyle(.window)
     }
     
+    // MARK: - Database-Ready Functions
+    
+    /// Load initial tasks when app starts (static function for initialization)
+    private static func loadInitialTasks() -> [Task] {
+        // TODO: Replace with actual database call
+        // e.g., return DatabaseManager.shared.fetchAllTasks()
+        return []
+    }
+    
+    /// Reload tasks from storage (for refreshing during runtime)
+    private func reloadTasks() {
+        // TODO: Replace with actual database call
+        // e.g., tasks = DatabaseManager.shared.fetchAllTasks()
+        tasks = Self.loadInitialTasks()
+    }
+    
+    /// Add a new task to storage
     private func addNewTask() {
         guard !newTaskName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
         
+        let trimmedName = newTaskName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let newTask = createTask(title: trimmedName)
+        
+        // Add to local array
+        insertTask(newTask)
+        
+        // Clear input
+        newTaskName = ""
+    }
+    
+    /// Create a new task with default values
+    private func createTask(title: String) -> Task {
         let colors: [Color] = [.blue, .green, .orange, .red, .pink, .mint, .purple, .cyan]
         let randomColor = colors.randomElement() ?? .blue
         
-        let newTask = Task(
-            title: newTaskName.trimmingCharacters(in: .whitespacesAndNewlines),
+        return Task(
+            id: UUID(), // Add unique ID for database operations
+            title: title,
             status: "",
             color: randomColor,
             isCompleted: false,
             progress: 0.0
         )
-        tasks.append(newTask)
-        newTaskName = "" // Clear the text field
+    }
+    
+    /// Insert a task into storage
+    private func insertTask(_ task: Task) {
+        // TODO: Replace with database insert
+        // e.g., DatabaseManager.shared.insertTask(task)
+        tasks.append(task)
+    }
+    
+    /// Update an existing task in storage
+    private func updateTask(_ task: Task, at index: Int) {
+        guard index < tasks.count else { return }
+        
+        // TODO: Replace with database update
+        // e.g., DatabaseManager.shared.updateTask(task)
+        tasks[index] = task
+    }
+    
+    /// Delete a task from storage
+    private func deleteTask(at index: Int) {
+        guard index < tasks.count else { return }
+        
+        let task = tasks[index]
+        
+        // TODO: Replace with database delete
+        // e.g., DatabaseManager.shared.deleteTask(task.id)
+        tasks.remove(at: index)
+    }
+    
+    /// Delete a task by ID
+    private func deleteTask(withId id: UUID) {
+        guard let index = tasks.firstIndex(where: { $0.id == id }) else { return }
+        deleteTask(at: index)
     }
 }
 
 struct Task {
+    let id: UUID // Added for database operations
     var title: String
     var status: String
     var color: Color
@@ -95,6 +168,8 @@ struct Task {
 
 struct TaskRowView: View {
     @Binding var task: Task
+    let onTaskUpdate: (Task) -> Void
+    let onDelete: () -> Void
     @State private var isAnimating = false
     
     var body: some View {
@@ -113,6 +188,8 @@ struct TaskRowView: View {
                             isAnimating = false
                         }
                     }
+                    // Notify parent of the update
+                    onTaskUpdate(task)
                 }
             }) {
                 Image(systemName: task.isCompleted ? "checkmark.square" : "square")
@@ -159,8 +236,8 @@ struct TaskRowView: View {
                             .foregroundColor(task.progress < 50 ? .primary : .white)
                             .opacity(0.8)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
+                    .padding(.leading, 12)
+                    .padding(.trailing, 30)
                 }
                 .gesture(
                     DragGesture(minimumDistance: 0)
@@ -173,23 +250,27 @@ struct TaskRowView: View {
                             } else {
                                 task.isCompleted = false
                             }
+                            // Notify parent of the update
+                            onTaskUpdate(task)
                         }
                 )
             }
             .frame(height: 44)
+        }
+        .overlay(alignment: .trailing) {
+            Button(role: .destructive, action: onDelete) {
+                Image(systemName: "trash")
+                    .font(.system(size: 13, weight: .semibold))
+                    .padding(6)                    // decent hit target
+            }
+            .buttonStyle(PlainButtonStyle())
+            .help("Delete task")
+            .keyboardShortcut(.delete, modifiers: []) // optional: ⌫ when row is focused
+            .padding(.trailing, 2)
         }
         .padding(.vertical, 1)
         .scaleEffect(isAnimating ? 1.05 : 1.0)
         .opacity(task.isCompleted ? (isAnimating ? 0.5 : 0.7) : 1.0)
         .animation(.easeInOut(duration: 0.15), value: isAnimating)
     }
-}
-
-#Preview {
-    VStack {
-        TaskRowView(task: .constant(Task(title: "email john", status: "not started", color: .pink, isCompleted: true, progress: 100.0)))
-        TaskRowView(task: .constant(Task(title: "project 1", status: "", color: .orange, isCompleted: false, progress: 75.0)))
-    }
-    .frame(width: 320)
-    .padding()
 }
