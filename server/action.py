@@ -26,36 +26,97 @@ n8n.webhook(webhook, action, args)
 """
 
 import webhook
+import json
 
 class Action:
-    def __init__(self, integration: str, action: str, args: dict, webhook: str):
-        assert(type(integration) == str)
-        assert(type(action) == str)
-        assert(type(args) == dict)
-        assert(type(webhook) == str)
-        self.integration = integration
-        self.action = action
-        self.args = args
-        self.webhook = webhook
+    def __init__(self = None, integration: str = None, action: str = None, args: dict = None, webhook: str = None, model_dump: str = None):
+        if model_dump:
+            assert(type(model_dump) == str)
+            model_dump = json.loads(model_dump)
+            self.integration = model_dump["integration"]
+            self.action = model_dump["action"]
+            self.args = model_dump["args"]
+            self.webhook = model_dump["webhook"]
+        else:
+            assert(type(integration) == str)
+            assert(type(action) == str)
+            assert(type(args) == dict)
+            assert(type(webhook) == str)
+            self.integration = integration
+            self.action = action
+            self.args = args
+            self.webhook = webhook
 
-    def __init__(self, model_dump: str):
-        ...
-
-    def serialize(self):
+    def serialize(self) -> str:
         """
-        Convert Action -> JSON.
+        Convert Action -> JSON string.
         """
-        ...
-
-    def deserialize(self):
+        data = {
+            "integration": self.integration,
+            "action": self.action,
+            "args": self.args,
+            "webhook": self.webhook
+        }
+        return json.dumps(data, indent=2)
+    
+    def deserialize(cls, json_str: str) -> 'Action':
         """
-        Convert JSON -> Action.
+        Convert JSON string -> Action.
         """
-        ...
+        try:
+            data = json.loads(json_str)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON string: {e}")
+        
+        # Validate required keys
+        required_keys = {"integration", "action", "args", "webhook"}
+        if not all(key in data for key in required_keys):
+            missing_keys = required_keys - set(data.keys())
+            raise ValueError(f"Missing required keys: {missing_keys}")
+        
+        return cls(
+            integration=data["integration"],
+            action=data["action"],
+            args=data["args"],
+            webhook=data["webhook"]
+        )
 
     def call(self):
         """
         Call the action webhook.
         """
         webhook.webhook(self.integration, self.action, self.args, self.webhook)
-        
+
+    def call_with_args(self, args: dict):
+        """
+        Call with specific arguments
+        """
+        assert(not self.__dict__.get("args"))
+        webhook.webhook(self.integration, self.action, args, self.webhook)
+
+
+    def __str__(self):
+        return f"{self.integration}.{self.action} ({self.webhook})\nArgs: {self.args}"
+
+class ActionTemplate(Action):
+    """
+    Action class for when you want to configure the action without providing args.
+    """
+    def __init__(self = None, integration: str = None, action: str = None, webhook: str = None, model_dump: str = None):
+        if model_dump:
+            assert(type(model_dump) == str)
+            model_dump = json.loads(model_dump)
+            self.integration = model_dump["integration"]
+            self.action = model_dump["action"]
+            self.webhook = model_dump["webhook"]
+        else:
+            assert(type(integration) == str)
+            assert(type(action) == str)
+            assert(type(webhook) == str)
+            self.integration = integration
+            self.action = action
+            self.webhook = webhook
+
+    def call(self):
+        raise NotImplementedError
+    
