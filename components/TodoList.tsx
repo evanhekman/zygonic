@@ -1,17 +1,16 @@
-
 import React from 'react';
-import { Todo } from '../types';
+import { Task } from '../types';
 import { TodoItem } from './TodoItem';
 
 interface TodoListProps {
-  todos: Todo[];
-  onUpdateProgress: (id: string, progress: number) => void;
-  onDeleteTodo: (id: string) => void;
-  onUpdateText: (id: string, text: string) => void;
+  tasks: Task[];
+  onUpdateProgress: (id: number, progress: number) => void;
+  onDeleteTask: (id: number) => void;
+  onUpdateText: (id: number, description: string) => void;
 }
 
-export const TodoList: React.FC<TodoListProps> = ({ todos, onUpdateProgress, onDeleteTodo, onUpdateText }) => {
-  if (todos.length === 0) {
+export const TodoList: React.FC<TodoListProps> = ({ tasks, onUpdateProgress, onDeleteTask, onUpdateText }) => {
+  if (tasks.length === 0) {
     return (
       <div className="text-center py-10 px-4 bg-slate-800/50 rounded-xl border border-slate-700">
         <p className="text-slate-400 text-lg">Your task list is empty.</p>
@@ -20,16 +19,19 @@ export const TodoList: React.FC<TodoListProps> = ({ todos, onUpdateProgress, onD
     );
   }
 
-  const sortedTodos = [...todos].sort((a, b) => a.createdAt - b.createdAt);
+  // Sort by created_at timestamp, newest first
+  const sortedTasks = [...tasks].sort((a, b) => 
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
   
   return (
     <div className="space-y-4">
-      {sortedTodos.map(todo => (
+      {sortedTasks.map(task => (
         <TodoItem 
-          key={todo.id} 
-          todo={todo}
+          key={task.id} 
+          task={task}
           onUpdateProgress={onUpdateProgress}
-          onDeleteTodo={onDeleteTodo}
+          onDeleteTask={onDeleteTask}
           onUpdateText={onUpdateText}
         />
       ))}
