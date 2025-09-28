@@ -180,7 +180,7 @@ class TaskManager:
         
         try:
             with self.db.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-                cursor.execute(select_query, (status.value,))
+                cursor.execute(select_query, (status,))
                 results = cursor.fetchall()
                 return [dict(row) for row in results]
         except psycopg2.Error as e:

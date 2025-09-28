@@ -38,7 +38,6 @@ curl -X POST "http://127.0.0.1:8000/new" \
   }'
 """
 
-import pytest
 import requests
 import json
 from typing import Dict, Any
@@ -216,7 +215,3 @@ if __name__ == "__main__":
     
     # Run tests manually
     run_manual_tests()
-    
-    print("\nTo run with pytest:")
-    print("pip install pytest requests")
-    print("pytest test_server.py -v")
