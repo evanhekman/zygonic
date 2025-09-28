@@ -106,10 +106,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
       {/* Progress Section with proper alignment */}
       <div className="flex items-center gap-4">
         <div className="flex-grow relative">
-          {/* Background track for the slider */}
-          {/* <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full bg-slate-600 rounded-full h-2 pointer-events-none" /> */}
+          <div className="absolute inset-0 top-1/3 bg-slate-600 rounded-full h-2 pointer-events-none" />
           {/* Progress fill that matches the slider position */}
-          {/* <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full bg-slate-600 rounded-full h-2 pointer-events-none" /> */}
           <div 
             className={`absolute left-0 top-1/3 h-2 rounded-full transition-all duration-150 pointer-events-none ${
               localProgress === 100 ? 'bg-green-500' : 'bg-cyan-500'
