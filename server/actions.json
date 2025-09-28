@@ -42,5 +42,50 @@
       }
     },
     "webhook": "NOTION"
+  },
+  {
+    "integration": "terminal",
+    "action": "execute",
+    "description": "Executes terminal commands for file creation, environment setup, and development tasks.",
+    "args": {
+      "command": {
+        "type": "string",
+        "description": "Terminal command to execute (e.g., 'mkdir src && touch src/main.py', 'python -m venv venv', 'npm init -y')"
+      },
+      "working_dir": {
+        "type": "string",
+        "description": "Directory to run command in",
+        "default": "."
+      }
+    },
+    "webhook": "TERMINAL"
+  },
+  {
+    "integration": "file",
+    "action": "modify",
+    "description": "Executes terminal commands for file creation, environment setup, and development tasks.",
+    "args": {
+      "filepath": {
+        "type": "string",
+        "description": "Path to the file that you want to open."
+      },
+      "content": {
+        "type": "string",
+        "description": "Content to overwrite the file with."
+      }
+    },
+    "webhook": "FILES"
+  },
+  {
+    "integration": "file",
+    "action": "open",
+    "description": "Opens the file in VSCode",
+    "args": {
+      "filepath": {
+        "type": "string",
+        "description": "Path to the file that you want to open."
+      }
+    },
+    "webhook": "FILES"
   }
 ]
