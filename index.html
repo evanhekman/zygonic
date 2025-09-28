@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleek Todo Progress Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom styles for range input thumb */
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 9999px;
+        background: #ecfeff;
+        cursor: pointer;
+        margin-top: -6px; /* You need to specify a margin in Chrome, but not in Firefox */
+        box-shadow: 0 0 2px rgba(0,0,0,0.5);
+      }
+
+      input[type=range]::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        border-radius: 9999px;
+        background: #ecfeff;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 0 2px rgba(0,0,0,0.5);
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.21.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-900">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
