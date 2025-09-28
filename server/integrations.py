@@ -33,21 +33,21 @@ def call_n8n_webhook(payload: dict, webhook: str):
 def create_notion_page(page_name: str, page_content: str):
     """Implementation for creating a Notion page."""
     return call_n8n_webhook(
-        payload={"action": "create", "page_name": page_name, "page_content": page_content},
+        payload={"http": "GET", "action": "create", "page_name": page_name, "page_content": page_content},
         webhook=NOTION,
     )
 
 def search_notion_page(query: str):
     """Implementation for searching a Notion page."""
     return call_n8n_webhook(
-        payload={"action": "search", "query": query},
+        payload={"http": "POST", "action": "search", "query": query},
         webhook=NOTION
     )
 
 def modify_notion_page(page_url: str, new_content: str):
     """Implementation for modifying a Notion page."""
     return call_n8n_webhook(
-        payload={"action": "modify", "page_url": page_url, "new_content": new_content},
+        payload={"http": "GET", "action": "modify", "page_url": page_url, "new_content": new_content},
         webhook=NOTION
     )
 
