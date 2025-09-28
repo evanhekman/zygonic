@@ -8,7 +8,7 @@ Do not respond with conversational text when calling a tool.
 Here are the tools available to you:
 [
   {
-    "name": "notion.create_page",
+    "tool_name": "notion.create_page",
     "description": "Creates a new page in Notion with a specified title and content. Use this to store new information, notes, or documents.",
     "parameters": {
       "type": "object",
@@ -26,7 +26,7 @@ Here are the tools available to you:
     }
   },
   {
-    "name": "notion.search_page",
+    "tool_name": "notion.search_page",
     "description": "Searches for existing pages in Notion by title or content. Use this to find information before creating a new page to avoid duplicates.",
     "parameters": {
       "type": "object",
@@ -40,7 +40,7 @@ Here are the tools available to you:
     }
   },
   {
-    "name": "notion.modify_page",
+    "tool_name": "notion.modify_page",
     "description": "Updates the content of an existing Notion page. You must know the exact title of the page you want to modify.",
     "parameters": {
       "type": "object",

@@ -9,16 +9,37 @@ load_dotenv()
 
 # --- Main execution block ---
 if __name__ == "__main__":
-    # 1. Define your webhook URL and the arguments.
-    N8N_NOTION_CREATE_PAGE = os.getenv("N8N_NOTION_CREATE_PAGE")
+    # NOTION = os.getenv("NOTION")
+    # test_params = {
+    #     "action": "create",
+    #     "page_name": "An Essay on Longtermism",
+    #     "page_content": " \
+    #         The vast majority of human beings who will ever live have not yet been born. \
+    #         This simple, yet profound, observation is the foundation of longtermism, an ethical framework \
+    #         that suggests our primary moral obligation is to ensure the long and flourishing future of humanity. \
+    #     "
+    # }
+
+    # result1 = integrations.call_n8n_webhook(payload=test_params, webhook=NOTION)
+    # print(json.dumps(result1, indent=2))
+
+    NOTION = os.getenv("NOTION")
     test_params = {
-        "page_name": "An Essay on Longtermism",
-        "page_content": " \
-            The vast majority of human beings who will ever live have not yet been born. \
-            This simple, yet profound, observation is the foundation of longtermism, an ethical framework \
-            that suggests our primary moral obligation is to ensure the long and flourishing future of humanity. \
-        "
+        "action": "search",
+        "query": "essay"
     }
 
-    result = integrations.call_n8n_webhook(payload=test_params, webhook=N8N_NOTION_CREATE_PAGE)
-    print(json.dumps(result, indent=2))
+    result2 = integrations.call_n8n_webhook(payload=test_params, webhook=NOTION)
+    print(test_params)
+    print(NOTION)
+    print(json.dumps(result2, indent=2))
+
+    # NOTION = os.getenv("NOTION")
+    # test_params = {
+    #     "action": "modify",
+    #     "page_url": result1["url"],
+    #     "new_content": "Extra stuff!"
+    # }
+
+    # result3 = integrations.call_n8n_webhook(payload=test_params, webhook=NOTION)
+    # print(json.dumps(result3, indent=2))
