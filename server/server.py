@@ -5,7 +5,7 @@ from google import generativeai as genai
 from typing import Optional
 import uvicorn
 from dotenv import load_dotenv
-import integrations
+import server.integrations as integrations
 import logging
 import json
 
@@ -20,7 +20,7 @@ logging.info('app started')
 # api config
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
-with open("prompts/backbone.txt") as f:
+with open("backbone.txt") as f:
     model = genai.GenerativeModel(
         'gemini-2.5-flash',
         system_instruction=f.read()

@@ -1,7 +1,7 @@
 import requests
 import logging
 import json
-import integrations
+import server.integrations as integrations
 from dotenv import load_dotenv
 import os
 
