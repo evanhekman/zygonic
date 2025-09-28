@@ -87,5 +87,108 @@
       }
     },
     "webhook": "FILES"
+  },
+{
+    "integration": "email",
+    "action": "draft",
+    "description": "Creates a draft email with specified subject and message content.",
+    "args": {
+      "subject": {
+        "type": "string",
+        "description": "The subject line of the email draft."
+      },
+      "message": {
+        "type": "string",
+        "description": "The body content of the email draft."
+      }
+    },
+    "webhook": "EMAIL"
+  },
+  {
+    "integration": "email",
+    "action": "search",
+    "description": "Searches for emails based on query parameters like sender, subject, or content.",
+    "args": {
+      "query": {
+        "type": "string",
+        "description": "Search query (e.g., 'from:sender@email.com', 'subject:meeting', or content keywords)."
+      }
+    },
+    "webhook": "EMAIL"
+  },
+  {
+    "integration": "gcal",
+    "action": "create",
+    "description": "Creates a new calendar event with specified details.",
+    "args": {
+      "title": {
+        "type": "string",
+        "description": "The title/summary of the calendar event."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional detailed description of the event.",
+        "default": ""
+      },
+      "start_time": {
+        "type": "string",
+        "description": "Start time (ISO format, e.g., '2024-01-15T10:00:00')."
+      },
+      "end_time": {
+        "type": "string",
+        "description": "End time (ISO format, e.g., '2024-01-15T11:00:00')."
+      }
+    },
+    "webhook": "GCAL"
+  },
+  {
+    "integration": "gcal",
+    "action": "search",
+    "description": "Searches for calendar events within a specified time range or by query.",
+    "args": {
+      "query": {
+        "type": "string",
+        "description": "Optional search query for event titles or descriptions.",
+        "default": ""
+      },
+      "start_time": {
+        "type": "string",
+        "description": "Start date for search range (ISO format, e.g., '2024-01-15T10:00:00').",
+        "default": "today"
+      },
+      "end_time": {
+        "type": "string",
+        "description": "End date for search range (ISO format, e.g., '2024-01-15T11:00:00').",
+        "default": "next week"
+      }
+    },
+    "webhook": "GCAL"
+  },
+  {
+    "integration": "sheets",
+    "action": "create",
+    "description": "Creates a new Google Sheets spreadsheet with optional worksheet names.",
+    "args": {
+      "title": {
+        "type": "string",
+        "description": "The title of the new spreadsheet."
+      },
+      "sheet1name": {
+        "type": "string",
+        "description": "First sheet.",
+        "default": "Sheet1"
+      },
+      "sheet2name": {
+        "type": "string",
+        "description": "Second sheet.",
+        "default": "Sheet2"
+      },
+      "sheet3name": {
+        "type": "string",
+        "description": "Third sheet.",
+        "default": "Sheet3"
+      }
+    },
+    "webhook": "SHEETS"
   }
 ]
