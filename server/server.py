@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from dotenv import load_dotenv
 import logging
@@ -13,6 +14,13 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Gemini API Backend", version="1.0.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Add your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 logging.info('app started')
 
 model = Model()
@@ -98,6 +106,20 @@ async def update_task(task_id: int, request: TaskRequest):
         raise HTTPException(status_code=500, detail="Failed to update task")
     
     return {"message": f"Task {task_id} updated", "task_id": task_id}
+
+
+@app.get("/all")
+async def get_all_tasks():
+    """
+    Returns all tasks from the database
+    """
+    logging.info("/all: fetching all tasks")
+    try:
+        tasks = task_mgr.get_all_tasks()
+        return {"status_code": 200, "content": tasks}
+    except Exception as e:
+        logging.error(f"Failed to fetch all tasks: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve tasks")
 
 
 if __name__ == "__main__":
