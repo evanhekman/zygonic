@@ -1,4 +1,4 @@
-**Prerequisites:**  Node.js
+### zygonic (2%)
 
 ### run web app
 npm install
