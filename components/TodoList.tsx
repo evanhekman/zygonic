@@ -7,9 +7,16 @@ interface TodoListProps {
   onUpdateProgress: (id: number, progress: number) => void;
   onDeleteTask: (id: number) => void;
   onUpdateText: (id: number, description: string) => void;
+  onStartTask?: (id: number) => void;
 }
 
-export const TodoList: React.FC<TodoListProps> = ({ tasks, onUpdateProgress, onDeleteTask, onUpdateText }) => {
+export const TodoList: React.FC<TodoListProps> = ({ 
+  tasks, 
+  onUpdateProgress, 
+  onDeleteTask, 
+  onUpdateText, 
+  onStartTask 
+}) => {
   if (tasks.length === 0) {
     return (
       <div className="text-center py-10 px-4 bg-slate-800/50 rounded-xl border border-slate-700">
@@ -18,6 +25,18 @@ export const TodoList: React.FC<TodoListProps> = ({ tasks, onUpdateProgress, onD
       </div>
     );
   }
+
+  const handleStartTask = async (id: number) => {
+    try {
+      const response = await fetch(`http://localhost:8000/start?task_id=${id}`, {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error('Failed to start task');
+      // Handle success - maybe refetch tasks
+    } catch (error) {
+      console.error('Error starting task:', error);
+    }
+  };
 
   // Sort by created_at timestamp, newest first
   const sortedTasks = [...tasks].sort((a, b) => 
@@ -33,6 +52,7 @@ export const TodoList: React.FC<TodoListProps> = ({ tasks, onUpdateProgress, onD
           onUpdateProgress={onUpdateProgress}
           onDeleteTask={onDeleteTask}
           onUpdateText={onUpdateText}
+          onStartTask={handleStartTask}
         />
       ))}
     </div>

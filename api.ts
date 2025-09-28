@@ -63,9 +63,8 @@ class ApiService {
   }
 
   async startTask(id: number): Promise<void> {
-    await this.request(`/start`, {
+    await this.request(`/start?task_id=${id}`, {
       method: 'POST',
-      body: JSON.stringify(id),
     });
   }
 }

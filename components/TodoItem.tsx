@@ -7,9 +7,10 @@ interface TodoItemProps {
   onUpdateProgress: (id: number, progress: number) => void;
   onDeleteTask: (id: number) => void;
   onUpdateText: (id: number, description: string) => void;
+  onStartTask?: (id: number) => void;
 }
 
-export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDeleteTask, onUpdateText }) => {
+export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDeleteTask, onUpdateText, onStartTask }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.description);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,12 +27,26 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
   }, [task.progress]);
 
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalProgress(parseInt(e.target.value, 10));
+    const newProgress = parseInt(e.target.value, 10);
+    setLocalProgress(newProgress);
+    // Update immediately during drag for real-time feedback
+    const progressAsDecimal = newProgress / 100;
+    onUpdateProgress(task.id, progressAsDecimal);
   };
 
   const handleProgressComplete = () => {
-    const progressAsDecimal = localProgress / 100;
-    onUpdateProgress(task.id, progressAsDecimal);
+    // This is now just for any final cleanup if needed
+    // The actual update happens in handleProgressChange
+  };
+
+  const handleStartTask = async () => {
+    if (onStartTask) {
+      try {
+        await onStartTask(task.id);
+      } catch (error) {
+        console.error('Failed to start task:', error);
+      }
+    }
   };
 
   const handleTextUpdate = () => {
@@ -106,6 +121,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
       {/* Progress Section with proper alignment */}
       <div className="flex items-center gap-4">
         <div className="flex-grow relative">
+          {/* Background track for the slider */}
           <div className="absolute inset-0 top-1/3 bg-slate-600 rounded-full h-2 pointer-events-none" />
           {/* Progress fill that matches the slider position */}
           <div 
@@ -114,6 +130,17 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
             }`}
             style={{ width: `${localProgress}%` }}
           />
+          
+          {/* Start button overlay when progress is 0% */}
+          {localProgress === 0 && onStartTask && (
+            <button
+              onClick={handleStartTask}
+              className="absolute inset-0 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl z-30"
+            >
+              Start Task
+            </button>
+          )}
+          
           <input
             type="range"
             min="0"
@@ -123,7 +150,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdateProgress, onDe
             onChange={handleProgressChange}
             onMouseUp={handleProgressComplete}
             onTouchEnd={handleProgressComplete}
-            className="w-full range-slider cursor-pointer relative z-10"
+            className={`w-full range-slider cursor-pointer relative z-10`}
             style={{ background: 'transparent' }}
           />
         </div>
